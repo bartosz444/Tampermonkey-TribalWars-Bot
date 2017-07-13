@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Tribal wars bot
-// @author       E.K.
+// @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
 // @grant        none
 // ==/UserScript==
@@ -12,21 +12,37 @@
 const OVERVIEW_VIEW = "OVERVIEW_VIEW";
 const HEADQUARTERS_VIEW = "HEADQUARTERS_VIEW";
 const RALLY_POINT_VIEW = "RALLY_POINT_VIEW";
+const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
 
 // Setup:
 // In tribal wars game settings: Disable 'Show village overview in a graphical format'
 // In this file: replace with current world @match https://en94.tribalwars.net/*
-const PHASE = "1";
+// PHASE_1: Buildings
+// PHASE_2: Buildings + Farming
+const PHASE = "PHASE_2";
+const FARM_TROOP_SET = "FARM_TROOP_SET_1";
+const FARM_COORDINATES = ['681|498', '681|497', '681|496', '682|496', '685|502'];
+
+let farmTroopSets = {
+    "FARM_TROOP_SET_1":{
+        "spear" : 10,
+        "sword" : 10
+    },
+    "FARM_TROOP_SET_2":{
+        "spear" : 15,
+        "axe" : 3
+    }
+};
 
 (function() {
     'use strict';
 
     console.log("-- Tribal Wars script enabled --");
 
-    if (PHASE == 1){
+    if (PHASE == "PHASE_1"){
         executePhase1();
     }
-    else if (PHASE == 2){
+    else if (PHASE == "PHASE_2"){
         executePhase2();
     }
 
@@ -52,7 +68,10 @@ function executePhase1(){
 // Phase 2: Farm
 function executePhase2(){
 
+    // TODO: Research axe
+
     let delay = Math.floor(Math.random() * 50000) + 30000;
+
     // Process action
     let currentView = getCurrentView();
     console.log(currentView);
@@ -67,13 +86,17 @@ function executePhase2(){
 
         }
         else if (currentView == RALLY_POINT_VIEW){
-            // TODO: Farm villages
-            // Open overview view
-            document.getElementsByClassName("nowrap tooltip-delayed")[0].click();
+
+            // Send out farm attacks
+            sendFarmAttacks();
+
         }
         else if (currentView == OVERVIEW_VIEW){
             // Open headquarters view
             document.getElementById("l_main").children[0].children[0].click();
+        }
+        else if (currentView == ATTACK_CONFIRM_VIEW){
+            document.getElementById("troop_confirm_go").click();
         }
     }, delay);
 }
@@ -82,10 +105,15 @@ function getCurrentView(){
     let currentUrl = window.location.href;
     if (currentUrl.endsWith('overview')){
         return OVERVIEW_VIEW;
-    }else if (currentUrl.endsWith('main')){
+    }
+    else if (currentUrl.endsWith('main')){
         return HEADQUARTERS_VIEW;
-    }else if (currentUrl.endsWith('place')){
+    }
+    else if (currentUrl.endsWith('place')){
         return RALLY_POINT_VIEW;
+    }
+    else if (currentUrl.endsWith('confirm')){
+        return ATTACK_CONFIRM_VIEW;
     }
 }
 
@@ -110,10 +138,122 @@ function getNextBuildingElement() {
                 found = nextBuilding;
             }
             // prevents from not waiting until next is available
+            // remove 'break;' if not desired
             break;
         }
     }
     return found;
+}
+
+
+function sendFarmAttacks(){
+
+    // check if enough available troops for selected FARM_TROOP_SET
+    // and get inputs
+    let availableInputs = getAvailableInputs();
+    if (availableInputs === undefined){
+        console.log("Not enough troops available");
+
+        // Open overview view
+        document.getElementById("menu_row").children[1].children[0].click();
+
+        return;
+    }
+
+    // get list of currently attacking villages
+    let currentlyAttackingCoordinates = getCurrentlyAttackingCoordinates();
+
+    // chose a farm that is not being attacked
+    for (let i = 0; i < FARM_COORDINATES.length; i++){
+        if (!currentlyAttackingCoordinates.includes(FARM_COORDINATES[i])){
+            sendAttackToCoordinate(FARM_COORDINATES[i], availableInputs);
+            return;
+        }
+    }
+}
+
+function sendAttackToCoordinate(coordinates, inputAmounts){
+
+    // enter values into troops inputs
+    for (var prop in inputAmounts) {
+        inputAmounts[prop].input.value = inputAmounts[prop].amount;
+    }
+
+    // enter coordinates into coordinates input
+    let coordinatesInput = document.getElementById("place_target").children[1];
+    coordinatesInput.value = coordinates;
+
+    // press attack button
+    document.getElementById("target_attack").click();
+}
+
+function getAvailableInputs(){
+
+    let availableInputs = {};
+
+    // get current troop set
+    let farmTroopSet = farmTroopSets[FARM_TROOP_SET];
+
+    let currentInput;
+    let currentInputAvailableCount;
+    let availableInputObject;
+
+    // spear
+    if (farmTroopSet.spear !== undefined){
+        let currentInput = document.getElementById("unit_input_spear");
+        let currentInputAvailableCount = currentInput.getAttribute("data-all-count");
+        if (farmTroopSet.spear > currentInputAvailableCount){
+            return;
+        }
+        let availableInputObject = {
+            "input" : currentInput,
+            "amount": farmTroopSet.spear
+        };
+        availableInputs.spear = availableInputObject;
+    }
+
+    // sword
+    if (farmTroopSet.sword !== undefined){
+        let currentInput = document.getElementById("unit_input_sword");
+        let currentInputAvailableCount = currentInput.getAttribute("data-all-count");
+        if (farmTroopSet.sword > currentInputAvailableCount){
+            return;
+        }
+        let availableInputObject = {
+            "input" : currentInput,
+            "amount": farmTroopSet.sword
+        };
+        availableInputs.sword = availableInputObject;
+    }
+
+    // axe
+    if (farmTroopSet.axe !== undefined){
+        let currentInput = document.getElementById("unit_input_axe");
+        let currentInputAvailableCount = currentInput.getAttribute("data-all-count");
+        if (farmTroopSet.axe > currentInputAvailableCount){
+            return;
+        }
+        let availableInputObject = {
+            "input" : currentInput,
+            "amount": farmTroopSet.axe
+        };
+        availableInputs.axe = availableInputObject;
+    }
+
+    return availableInputs;
+}
+
+function getCurrentlyAttackingCoordinates(){
+    let currentlyAttackingElements = document.getElementsByClassName("quickedit-label");
+    let currentlyAttackingCoordinates = [];
+
+    for (var i = 0, len = currentlyAttackingElements.length; i < len; i++) {
+        let coordinatesString =
+            currentlyAttackingElements[i].innerHTML.split(")")[0].split("(")[1];
+        currentlyAttackingCoordinates.push(coordinatesString);
+    }
+
+    return currentlyAttackingCoordinates;
 }
 
 function getBuildingElementsQueue() {
