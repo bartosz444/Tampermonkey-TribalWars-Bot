@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 // @description  Tribal wars bot
 // @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
@@ -13,6 +13,8 @@ const OVERVIEW_VIEW = "OVERVIEW_VIEW";
 const HEADQUARTERS_VIEW = "HEADQUARTERS_VIEW";
 const RALLY_POINT_VIEW = "RALLY_POINT_VIEW";
 const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
+const MIN_WAIT_TIME = 200000;
+const MAX_WAIT_TIME = 300000;
 
 // Setup:
 // In tribal wars game settings: Disable 'Show village overview in a graphical format'
@@ -20,7 +22,7 @@ const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
 // PHASE_1: Buildings
 // PHASE_2: Buildings + Farming
 const PHASE = "PHASE_2";
-const FARM_TROOP_SET = "FARM_TROOP_SET_1";
+const FARM_TROOP_SET = "FARM_TROOP_SET_3";
 const FARM_COORDINATES = ['315|541', '315|539', '318|543', '319|543'];
 
 let farmTroopSets = {
@@ -31,6 +33,9 @@ let farmTroopSets = {
     "FARM_TROOP_SET_2":{
         "spear" : 15,
         "axe" : 3
+    },
+    "FARM_TROOP_SET_3":{
+        "lc" : 3
     }
 };
 
@@ -70,7 +75,7 @@ function executePhase2(){
 
     // TODO: Research axe
 
-    let delay = Math.floor(Math.random() * 700000) + 500000;
+    let delay = Math.floor(Math.random() * (MAX_WAIT_TIME - MIN_WAIT_TIME) + MIN_WAIT_TIME);
 
     // Process action
     let currentView = getCurrentView();
@@ -248,6 +253,20 @@ function getAvailableInputs(){
             "amount": farmTroopSet.axe
         };
         availableInputs.axe = availableInputObject;
+    }
+
+    // lc
+    if (farmTroopSet.lc !== undefined){
+        let currentInput = document.getElementById("unit_input_light");
+        let currentInputAvailableCount = currentInput.getAttribute("data-all-count");
+        if (farmTroopSet.lc > currentInputAvailableCount){
+            return;
+        }
+        let availableInputObject = {
+            "input" : currentInput,
+            "amount": farmTroopSet.lc
+        };
+        availableInputs.lc = availableInputObject;
     }
 
     return availableInputs;
