@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  Tribal wars bot
 // @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
@@ -165,7 +165,7 @@ function sendFarmAttacks(){
 
     // chose a farm that is not being attacked
 
-    let choice = Math.random() * FARM_COORDINATES.length;
+    let choice = Math.floor(Math.random() * FARM_COORDINATES.length);
 
     for (let i = 0; i < FARM_COORDINATES.length; i++){
 
