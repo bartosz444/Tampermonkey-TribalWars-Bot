@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Tribal wars bot
 // @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
@@ -21,7 +21,7 @@ const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
 // PHASE_2: Buildings + Farming
 const PHASE = "PHASE_2";
 const FARM_TROOP_SET = "FARM_TROOP_SET_1";
-const FARM_COORDINATES = ['681|498', '681|497', '681|496', '682|496', '685|502'];
+const FARM_COORDINATES = ['315|541', '315|539', '318|543', '319|543'];
 
 let farmTroopSets = {
     "FARM_TROOP_SET_1":{
@@ -70,7 +70,7 @@ function executePhase2(){
 
     // TODO: Research axe
 
-    let delay = Math.floor(Math.random() * 50000) + 30000;
+    let delay = Math.floor(Math.random() * 700000) + 500000;
 
     // Process action
     let currentView = getCurrentView();
@@ -164,11 +164,21 @@ function sendFarmAttacks(){
     let currentlyAttackingCoordinates = getCurrentlyAttackingCoordinates();
 
     // chose a farm that is not being attacked
+
+    let choice = Math.random() * FARM_COORDINATES.length;
+
     for (let i = 0; i < FARM_COORDINATES.length; i++){
-        if (!currentlyAttackingCoordinates.includes(FARM_COORDINATES[i])){
-            sendAttackToCoordinate(FARM_COORDINATES[i], availableInputs);
+
+        if (choice >= FARM_COORDINATES.length){
+            choice -= FARM_COORDINATES.length;
+        }
+
+        if (!currentlyAttackingCoordinates.includes(FARM_COORDINATES[choice])){
+            sendAttackToCoordinate(FARM_COORDINATES[choice], availableInputs);
             return;
         }
+        choice++;
+
     }
 }
 
@@ -373,12 +383,22 @@ function getBuildingElementsQueue() {
     queue.push("main_buildlink_storage_6");
     // Build Smithy 5
     queue.push("main_buildlink_smith_5");
-
-    // TODO
+    // Build Iron 8
+    queue.push("main_buildlink_iron_8");
+    // Build Iron 9
+    queue.push("main_buildlink_iron_9");
+    // Build Iron 10
+    queue.push("main_buildlink_iron_10");
     // Build Stable 1
+    queue.push("main_buildlink_stable_1");
     // Build Stable 2
+    queue.push("main_buildlink_stable_2");
     // Build Stable 3
+    queue.push("main_buildlink_stable_3");
     // Build Wall 1
+    queue.push("main_buildlink_wall_1");
+    // TODO research LC
+    // TODO recruit LC
 
     return queue;
 }
