@@ -13,8 +13,8 @@ const OVERVIEW_VIEW = "OVERVIEW_VIEW";
 const HEADQUARTERS_VIEW = "HEADQUARTERS_VIEW";
 const RALLY_POINT_VIEW = "RALLY_POINT_VIEW";
 const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
-const MIN_WAIT_TIME = 200000;
-const MAX_WAIT_TIME = 300000;
+const MIN_WAIT_TIME = 12000;
+const MAX_WAIT_TIME = 30000;
 
 // Setup:
 // In tribal wars game settings: Disable 'Show village overview in a graphical format'
@@ -23,7 +23,12 @@ const MAX_WAIT_TIME = 300000;
 // PHASE_2: Buildings + Farming
 const PHASE = "PHASE_2";
 const FARM_TROOP_SET = "FARM_TROOP_SET_3";
-const FARM_COORDINATES = ['315|541', '315|539', '318|543', '319|543'];
+const FARM_COORDINATES = [
+    /*'315|539',*/ '319|535', '319|536', '319|537',// 1,1
+    /*'315|541',*/ '318|543', '319|543', // 1,0
+    '320|541', '320|542', '320|543', '320|544', '322|540', '321|540',// 2,0
+    '318|546', '319|545' // 1,-1
+];
 
 let farmTroopSets = {
     "FARM_TROOP_SET_1":{
@@ -35,7 +40,7 @@ let farmTroopSets = {
         "axe" : 3
     },
     "FARM_TROOP_SET_3":{
-        "lc" : 3
+        "lc" : 4
     }
 };
 
@@ -417,7 +422,29 @@ function getBuildingElementsQueue() {
     // Build Wall 1
     queue.push("main_buildlink_wall_1");
     // TODO research LC
-    // TODO recruit LC
+    // TODO recruit 50 LC
+    queue.push("main_buildlink_stone_8");
+    queue.push("main_buildlink_stone_9");
+    queue.push("main_buildlink_storage_7");
+    queue.push("main_buildlink_farm_7");
+    queue.push("main_buildlink_market_4");
+    queue.push("main_buildlink_market_5");
+    queue.push("main_buildlink_barracks_6");
+    queue.push("main_buildlink_barracks_7");
+    queue.push("main_buildlink_iron_11");
+    queue.push("main_buildlink_iron_12");
+    queue.push("main_buildlink_iron_13");
+    queue.push("main_buildlink_farm_8");
+    queue.push("main_buildlink_farm_9");
+    queue.push("main_buildlink_iron_14");
+    queue.push("main_buildlink_iron_15");
+    queue.push("main_buildlink_stone_10");
+    queue.push("main_buildlink_storage_8");
+    queue.push("main_buildlink_farm_8");
+    queue.push("main_buildlink_wood_11");
+    queue.push("main_buildlink_wood_12");
+    queue.push("main_buildlink_stone_11");
+    queue.push("main_buildlink_wood_13");
 
     return queue;
 }
