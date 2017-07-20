@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  Tribal wars bot
 // @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
@@ -439,12 +439,19 @@ function getBuildingElementsQueue() {
     queue.push("main_buildlink_iron_14");
     queue.push("main_buildlink_iron_15");
     queue.push("main_buildlink_stone_10");
+    queue.push("main_buildlink_stone_11");
     queue.push("main_buildlink_storage_8");
-    queue.push("main_buildlink_farm_8");
+    queue.push("main_buildlink_farm_10");
     queue.push("main_buildlink_wood_11");
     queue.push("main_buildlink_wood_12");
-    queue.push("main_buildlink_stone_11");
     queue.push("main_buildlink_wood_13");
+    queue.push("main_buildlink_main_11");
+    queue.push("main_buildlink_main_12");
+    queue.push("main_buildlink_farm_11");
+    queue.push("main_buildlink_stone_12");
+    queue.push("main_buildlink_iron_16");
+    queue.push("main_buildlink_stone_13");
+    queue.push("main_buildlink_wood_14");
 
     return queue;
 }
