@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      1.0
 // @description  Tribal wars bot
 // @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
@@ -13,8 +13,8 @@ const OVERVIEW_VIEW = "OVERVIEW_VIEW";
 const HEADQUARTERS_VIEW = "HEADQUARTERS_VIEW";
 const RALLY_POINT_VIEW = "RALLY_POINT_VIEW";
 const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
-const MIN_WAIT_TIME = 12000;
-const MAX_WAIT_TIME = 30000;
+const MIN_WAIT_TIME = 3000;
+const MAX_WAIT_TIME = 6000;
 
 // Setup:
 // In tribal wars game settings: Disable 'Show village overview in a graphical format'
@@ -160,12 +160,13 @@ function sendFarmAttacks(){
 
     // check if enough available troops for selected FARM_TROOP_SET
     // and get inputs
+
     let availableInputs = getAvailableInputs();
     if (availableInputs === undefined){
         console.log("Not enough troops available");
 
         // Open overview view
-        document.getElementById("menu_row").children[1].children[0].click();
+        goToOverviewViewFromRallyPointView();
 
         return;
     }
@@ -174,7 +175,6 @@ function sendFarmAttacks(){
     let currentlyAttackingCoordinates = getCurrentlyAttackingCoordinates();
 
     // chose a farm that is not being attacked
-
     let choice = Math.floor(Math.random() * FARM_COORDINATES.length);
 
     for (let i = 0; i < FARM_COORDINATES.length; i++){
@@ -190,6 +190,14 @@ function sendFarmAttacks(){
         choice++;
 
     }
+    // In the case where not enough farms were identified for
+    // the amount of troops available
+    // Open overview view
+    goToOverviewViewFromRallyPointView();
+}
+
+function goToOverviewViewFromRallyPointView(){
+    document.getElementById("menu_row").children[1].children[0].click();
 }
 
 function sendAttackToCoordinate(coordinates, inputAmounts){
@@ -453,5 +461,7 @@ function getBuildingElementsQueue() {
     queue.push("main_buildlink_stone_13");
     queue.push("main_buildlink_wood_14");
 
+    queue.push("main_buildlink_farm_12");
+    queue.push("main_buildlink_farm_13");
     return queue;
 }
