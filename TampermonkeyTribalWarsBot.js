@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Tribal wars bot
 // @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
@@ -13,8 +13,8 @@ const OVERVIEW_VIEW = "OVERVIEW_VIEW";
 const HEADQUARTERS_VIEW = "HEADQUARTERS_VIEW";
 const RALLY_POINT_VIEW = "RALLY_POINT_VIEW";
 const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
-const MIN_WAIT_TIME = 3000;
-const MAX_WAIT_TIME = 6000;
+const MIN_WAIT_TIME = 20000;
+const MAX_WAIT_TIME = 40000;
 
 // Setup:
 // In tribal wars game settings: Disable 'Show village overview in a graphical format'
@@ -22,14 +22,19 @@ const MAX_WAIT_TIME = 6000;
 // PHASE_1: Buildings
 // PHASE_2: Buildings + Farming
 const PHASE = "PHASE_2";
-const FARM_TROOP_SET = "FARM_TROOP_SET_3";
+const WAIT_FOR_ORDER_BUILDINGS = false;
 const FARM_COORDINATES = [
+    '312|542', // 0,0
     /*'315|539',*/ '319|535', '319|536', '319|537',// 1,1
+    '322|538', // 2,1
     /*'315|541',*/ '318|543', '319|543', // 1,0
     '320|541', '320|542', '320|543', '320|544', '322|540', '321|540',// 2,0
-    '318|546', '319|545' // 1,-1
+    '312|547', '313|548', '314|546', // 0, -1
+    '318|546', '319|545', // 1,-1
+    '315|551' // 1, -2
 ];
 
+const FARM_TROOP_SET = "FARM_TROOP_SET_3";
 let farmTroopSets = {
     "FARM_TROOP_SET_1":{
         "spear" : 10,
@@ -40,7 +45,7 @@ let farmTroopSets = {
         "axe" : 3
     },
     "FARM_TROOP_SET_3":{
-        "lc" : 4
+        "lc" : 8
     }
 };
 
@@ -147,9 +152,9 @@ function getNextBuildingElement() {
             if (isVisible){
                 found = nextBuilding;
             }
-            // prevents from not waiting until next is available
-            // remove 'break;' if not desired
-            break;
+            if (WAIT_FOR_ORDER_BUILDINGS){
+                break;
+            }
         }
     }
     return found;
@@ -430,7 +435,7 @@ function getBuildingElementsQueue() {
     // Build Wall 1
     queue.push("main_buildlink_wall_1");
     // TODO research LC
-    // TODO recruit 50 LC
+    // TODO recruit LC
     queue.push("main_buildlink_stone_8");
     queue.push("main_buildlink_stone_9");
     queue.push("main_buildlink_storage_7");
@@ -456,12 +461,67 @@ function getBuildingElementsQueue() {
     queue.push("main_buildlink_main_11");
     queue.push("main_buildlink_main_12");
     queue.push("main_buildlink_farm_11");
-    queue.push("main_buildlink_stone_12");
-    queue.push("main_buildlink_iron_16");
-    queue.push("main_buildlink_stone_13");
-    queue.push("main_buildlink_wood_14");
-
     queue.push("main_buildlink_farm_12");
     queue.push("main_buildlink_farm_13");
+    queue.push("main_buildlink_storage_9");
+    queue.push("main_buildlink_iron_16");
+    queue.push("main_buildlink_stone_12");
+    queue.push("main_buildlink_stone_13");
+    queue.push("main_buildlink_stone_14");
+    queue.push("main_buildlink_wood_14");
+    queue.push("main_buildlink_wood_15");
+    queue.push("main_buildlink_stone_15");
+    queue.push("main_buildlink_wall_2");
+    queue.push("main_buildlink_wall_3");
+    queue.push("main_buildlink_wall_4");
+    queue.push("main_buildlink_wall_5");
+    queue.push("main_buildlink_wall_6");
+    queue.push("main_buildlink_wall_7");
+    queue.push("main_buildlink_wall_8");
+    queue.push("main_buildlink_storage_10");
+    queue.push("main_buildlink_wall_9");
+    queue.push("main_buildlink_wall_10");
+    queue.push("main_buildlink_stable_4");
+    queue.push("main_buildlink_stable_5");
+    queue.push("main_buildlink_main_13");
+    queue.push("main_buildlink_main_14");
+    queue.push("main_buildlink_main_15");
+    queue.push("main_buildlink_wood_16");
+    queue.push("main_buildlink_stone_16");
+    queue.push("main_buildlink_storage_11");
+    queue.push("main_buildlink_storage_12");
+    queue.push("main_buildlink_storage_13");
+    queue.push("main_buildlink_storage_14");
+    queue.push("main_buildlink_farm_14");
+    queue.push("main_buildlink_farm_15");
+    queue.push("main_buildlink_farm_16");
+    queue.push("main_buildlink_wood_17");
+    queue.push("main_buildlink_stone_17");
+    queue.push("main_buildlink_iron_17");
+    queue.push("main_buildlink_storage_15");
+    queue.push("main_buildlink_wood_18");
+    queue.push("main_buildlink_stone_18");
+    queue.push("main_buildlink_iron_18");
+    queue.push("main_buildlink_storage_16");
+
+    /////////
+    queue.push("main_buildlink_storage_17");
+    queue.push("main_buildlink_storage_18");
+    queue.push("main_buildlink_main_16");
+    queue.push("main_buildlink_main_17");
+    queue.push("main_buildlink_main_18");
+    queue.push("main_buildlink_main_19");
+    queue.push("main_buildlink_main_20");
+    queue.push("main_buildlink_farm_17");
+    queue.push("main_buildlink_farm_18");
+    queue.push("main_buildlink_farm_19");
+    queue.push("main_buildlink_farm_20");
+    queue.push("main_buildlink_wood_19");
+    queue.push("main_buildlink_wood_20");
+    queue.push("main_buildlink_stone_19");
+    queue.push("main_buildlink_stone_20");
+    queue.push("main_buildlink_iron_19");
+    queue.push("main_buildlink_iron_20");
+
     return queue;
 }
