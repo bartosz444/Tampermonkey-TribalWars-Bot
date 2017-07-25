@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tribal wars
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Tribal wars bot
 // @author       Eric Kavalec
 // @match        https://en94.tribalwars.net/*
@@ -24,14 +24,20 @@ const MAX_WAIT_TIME = 40000;
 const PHASE = "PHASE_2";
 const WAIT_FOR_ORDER_BUILDINGS = false;
 const FARM_COORDINATES = [
-    '312|542', // 0,0
-    /*'315|539',*/ '319|535', '319|536', '319|537',// 1,1
+    '311|543', '312|542', '312|541', '313|540', // 0,0
+    '309|541', // -1,0
+    '309|537', // -1,1
+    '310|537', '312|538', '313|538', '314|538', '314|536', // 0,1
+    '315|537', '315|538', '315|539', '316|536', '317|536', '318|536', '319|536', '319|535', // 1,1
     '322|538', // 2,1
-    /*'315|541',*/ '318|543', '319|543', // 1,0
-    '320|541', '320|542', '320|543', '320|544', '322|540', '321|540',// 2,0
-    '312|547', '313|548', '314|546', // 0, -1
-    '318|546', '319|545', // 1,-1
-    '315|551' // 1, -2
+    '315|541', '315|544', /*'317|544',*/ '318|540', '318|543', '319|543', // 1,0
+    '320|541', '320|542', '320|543', '320|544', '321|541', '322|540', '322|543', '323|541', '323|542', '324|541', '324|543', // 2,0
+    '311|545', '311|549', '312|547', '313|548', '314|546',  // 0, -1
+    '316|547', '316|548', '318|546', '319|545', // 1,-1
+    '320|547', '322|547', '322|549', '323|545', '324|545', '324|546', // 2, -1
+    '311|550', '311|551', /*'311|552',*/ '313|553', '313|554', // 0, -2
+    '315|550', '315|551', '315|554', '316|551', '318|550', '318|551', '319|550', '319|554',  // 1, -2
+    '320|554', '321|552', '321|554', '322|550', '322|553', '323|550', '323|554', '324|550'// 2, -2
 ];
 
 const FARM_TROOP_SET = "FARM_TROOP_SET_3";
@@ -206,6 +212,8 @@ function goToOverviewViewFromRallyPointView(){
 }
 
 function sendAttackToCoordinate(coordinates, inputAmounts){
+
+    console.log("Sending attack to: " + coordinates);
 
     // enter values into troops inputs
     for (var prop in inputAmounts) {
@@ -522,6 +530,11 @@ function getBuildingElementsQueue() {
     queue.push("main_buildlink_stone_20");
     queue.push("main_buildlink_iron_19");
     queue.push("main_buildlink_iron_20");
+    queue.push("main_buildlink_stable_6");
+    queue.push("main_buildlink_stable_7");
+    queue.push("main_buildlink_stable_8");
+    queue.push("main_buildlink_stable_9");
+    queue.push("main_buildlink_stable_10");
 
     return queue;
 }
