@@ -4,43 +4,28 @@
 // @version      1.2
 // @description  Tribal wars bot
 // @author       Eric Kavalec
-// @match        https://en94.tribalwars.net/*
+// @match        https://enXX.tribalwars.net/*
 // @grant        none
 // ==/UserScript==
 
-// Constants
-const OVERVIEW_VIEW = "OVERVIEW_VIEW";
-const HEADQUARTERS_VIEW = "HEADQUARTERS_VIEW";
-const RALLY_POINT_VIEW = "RALLY_POINT_VIEW";
-const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
+//*************************** SETUP ***************************//
+// Choose Minimum and maximum wait time between actions (in milliseconds)
 const MIN_WAIT_TIME = 20000;
 const MAX_WAIT_TIME = 40000;
-
-// Setup:
-// In tribal wars game settings: Disable 'Show village overview in a graphical format'
-// In this file: replace with current world @match https://en94.tribalwars.net/*
-// PHASE_1: Buildings
-// PHASE_2: Buildings + Farming
-const PHASE = "PHASE_2";
+// Choose the bot's actions
+// PHASE_1: The bot automatically queues buildings
+// PHASE_2: The bot automatically queues buildings and farms villages 
+const PHASE = "PHASE_1";
+// Choose whether you want the bot to queue buildings in the defined order (= true) or  
+// as soon as a building is available for the building queue (= false)
 const WAIT_FOR_ORDER_BUILDINGS = false;
+// Enter the coordinates of the villages you want to farm 
 const FARM_COORDINATES = [
-    '311|543', '312|542', '312|541', '313|540', // 0,0
-    '309|541', // -1,0
-    '309|537', // -1,1
-    '310|537', '312|538', '313|538', '314|538', '314|536', // 0,1
-    '315|537', '315|538', '315|539', '316|536', '317|536', '318|536', '319|536', '319|535', // 1,1
-    '322|538', // 2,1
-    '315|541', '315|544', /*'317|544',*/ '318|540', '318|543', '319|543', // 1,0
-    '320|541', '320|542', '320|543', '320|544', '321|541', '322|540', '322|543', '323|541', '323|542', '324|541', '324|543', // 2,0
-    '311|545', '311|549', '312|547', '313|548', '314|546',  // 0, -1
-    '316|547', '316|548', '318|546', '319|545', // 1,-1
-    '320|547', '322|547', '322|549', '323|545', '324|545', '324|546', // 2, -1
-    '311|550', '311|551', /*'311|552',*/ '313|553', '313|554', // 0, -2
-    '315|550', '315|551', '315|554', '316|551', '318|550', '318|551', '319|550', '319|554',  // 1, -2
-    '320|554', '321|552', '321|554', '322|550', '322|553', '323|550', '323|554', '324|550'// 2, -2
+    '000|000', '000|000', '000|000'
 ];
-
+// Choose your farming troops template
 const FARM_TROOP_SET = "FARM_TROOP_SET_3";
+// Define your farming troops template
 let farmTroopSets = {
     "FARM_TROOP_SET_1":{
         "spear" : 10,
@@ -54,6 +39,13 @@ let farmTroopSets = {
         "lc" : 8
     }
 };
+//*************************** /SETUP ***************************//
+
+// Constants
+const OVERVIEW_VIEW = "OVERVIEW_VIEW";
+const HEADQUARTERS_VIEW = "HEADQUARTERS_VIEW";
+const RALLY_POINT_VIEW = "RALLY_POINT_VIEW";
+const ATTACK_CONFIRM_VIEW = "ATTACK_CONFIRM_VIEW";
 
 (function() {
     'use strict';
@@ -511,7 +503,6 @@ function getBuildingElementsQueue() {
     queue.push("main_buildlink_stone_18");
     queue.push("main_buildlink_iron_18");
     queue.push("main_buildlink_storage_16");
-
     /////////
     queue.push("main_buildlink_storage_17");
     queue.push("main_buildlink_storage_18");
