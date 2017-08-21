@@ -3,21 +3,21 @@ Tampermonkey script for Tribal Wars 1
 
 ## Requirements
 
-1. Google Chrome
+1. Google Chrome  
 [Google Chrome download link](https://www.google.com/chrome/browser/desktop/index.html "Google Chrome download link")
 
-2. Tampermonkey
-Tampermonkey is a userscript manager for google chrome
+2. Tampermonkey  
+Tampermonkey is a userscript manager for google chrome  
 [Tampermonkey download link](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en "Tampermonkey download link")
 
-3. A Tribal Wars 1 account
+3. A Tribal Wars 1 account  
 [Tribal wars 1](https://www.tribalwars.net/ "Tribal wars 1")
 
 ## Setup  
 1. In tribal wars game settings:  
 Disable 'Show village overview in a graphical format'  
 
-2. In the TamermonkeyTribalWarsBot.js file of this repository, on line 7 (@match https://enXX.tribalwars.net/*):  
+2. In the TamermonkeyTribalWarsBot.js file of this repository, on line 7:  
 Replace 'XX' with your current world (Example for world 94: @match https://en94.tribalwars.net/*)  
 
 3. In the TamermonkeyTribalWarsBot.js file of this repository, between lines 11 and 42 (setup section):  
