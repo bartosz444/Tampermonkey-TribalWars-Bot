@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         Tribal wars
-// @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  Tribal wars bot
-// @author       Eric Kavalec
-// @match        https://enXX.tribalwars.net/*
+// @name test
+// @namespace Tampermonkey ? Home
+// @version 0.1
+// @description try to take over the world!
+// @author xxx
+// @match https://pl122.plemiona.pl/*
 // @grant        none
 // ==/UserScript==
 
